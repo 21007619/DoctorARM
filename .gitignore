@@ -24,12 +24,6 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# Visual Studio cache/options
-.vs/
-
-# Visual Studio Code
-.vscode/
-*.code-workspace
 
 # Rider
 .idea/
@@ -42,3 +36,11 @@ bld/
 # Local environment
 .env
 .env.local
+
+# Installers / Binaries
+dotnet-sdk-10.0.302-win-x64.exe
+ndp48-x86-x64-allos-enu.exe
+dotnetfx35.exe
+Microsoft WSE 3.0.msi
+dotnet-hosting-10.0.10-win.exe
+

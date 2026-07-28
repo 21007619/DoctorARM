@@ -1,0 +1,1 @@
+# write script to verify backed is configured correctly
