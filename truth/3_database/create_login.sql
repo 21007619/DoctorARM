@@ -9,8 +9,8 @@ FROM sys.databases
 WHERE owner_sid = SUSER_SID('LukaszARM'); 
 EXEC(@sql); 
 
-IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'LukaszARM') 
-DROP LOGIN [LukaszARM]; 
+-- IF EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'LukaszARM')
+-- DROP LOGIN [LukaszARM]; 
 
 CREATE LOGIN [LukaszARM] 
 WITH PASSWORD = 'FuturePotato?', 

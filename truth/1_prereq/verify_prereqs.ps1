@@ -34,6 +34,19 @@ Write-Host ""
 Test-Requirement "Chocolatey" {
     (Get-Command choco -ErrorAction SilentlyContinue) -or (Test-Path "$env:ProgramData\chocolatey\bin\choco.exe")
 }
+# 2a. ARM Registry Check
+Test-Requirement "ARM Registry Entries" {
+    $regPath = "HKLM:\\SOFTWARE\\Strategic Thought Ltd\\Active Risk Manager Server"
+    $prop = Get-ItemProperty -Path $regPath -ErrorAction SilentlyContinue
+    $hasKey = $prop -and $prop.LicenceKey -ne $null
+    if ($hasKey) {
+        $domain = $prop.SetupDomainName
+        $user = $prop.SetupUserName
+        Write-Host "[INFO] SetupDomainName = $domain" -ForegroundColor Cyan
+        Write-Host "[INFO] SetupUserName = $user" -ForegroundColor Cyan
+    }
+    $hasKey
+}
 
 # 2. Notepad++
 Test-Requirement "Notepad++" {
@@ -111,17 +124,7 @@ Test-Requirement ".NET Framework 3.5" {
     ((Get-WindowsOptionalFeature -Online -FeatureName NetFx3 -ErrorAction SilentlyContinue).State -eq "Enabled") -or
     ((Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" -ErrorAction SilentlyContinue).Install -eq 1)
 }
-# 12. ASP.NET Core Hosting Bundle
-Test-Requirement "ASP.NET Core Hosting Bundle" {
-    $dllExists = Test-Path "C:\Program Files\IIS\Asp.Net Core Module\V2\aspnetcorev2.dll"
-    if (-not $dllExists) {
-        $iisService = Get-Service W3SVC -ErrorAction SilentlyContinue
-        if (-not $iisService) {
-            Write-Host "       -> Note: IIS Web Server is NOT installed! Run install_iis.ps1 first, then run dotnet\install_hosting_bundle.bat." -ForegroundColor Yellow
-        }
-    }
-    $dllExists
-}
+
 
 # 13. WSE 3.0 (Web Services Enhancements 3.0)
 Test-Requirement "WSE 3.0" {
@@ -138,7 +141,7 @@ Test-Requirement ".NET 10 SDK (major 10)" {
         $matches = $sdks -split "`n" | ForEach-Object { $_.Trim() } |
             Where-Object { $_ -match '^10\.' }
         if ($matches) {
-            Write-Host "[INFO] .NET SDK versions installed: $($matches -join ', ')"
+            Write-Host "[INFO] .NET SDK versions installed: $($matches -join ', ')" -ForegroundColor Cyan
             $true
         } else {
             $false
@@ -191,7 +194,7 @@ Write-Host " Summary" -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan
 $failedCount = ($results.Values | Where-Object { $_ -eq "FAIL" }).Count
 if ($failedCount -eq 0) {
-    Write-Host "All prerequisites are installed and verified successfully!" -ForegroundColor Green
+    Write-Host "All prerequisites are installed and verified successfully!" -ForegroundColor Yellow
 } else {
     Write-Host "$failedCount prerequisite(s) missing or failed verification." -ForegroundColor Yellow
 }

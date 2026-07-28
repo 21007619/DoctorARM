@@ -44,3 +44,5 @@ dotnetfx35.exe
 Microsoft WSE 3.0.msi
 dotnet-hosting-10.0.10-win.exe
 
+# others
+*.iso
